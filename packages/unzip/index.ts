@@ -124,19 +124,28 @@ export async function* walkEntriesGenerator(zip: ZipFile): AsyncGenerator<Entry,
  * @param zip The zip file
  * @param entries The entry to read
  */
-export async function filterEntries(zip: ZipFile, entries: string[]): Promise<(Entry | undefined)[]> {
-    const remaining = new Set(entries);
-    const record: Record<string, Entry> = {};
+export async function filterEntries(zip: ZipFile, entries: Array<string | ((entry: Entry) => boolean)>): Promise<(Entry | undefined)[]> {
+    const bags = entries.map(e => [e, undefined as undefined | Entry] as const)
+    let remaining = entries.length
     for await (const entry of walkEntriesGenerator(zip)) {
-        if (remaining.size === 0) {
-            break;
-        }
-        if (remaining.has(entry.fileName)) {
-            remaining.delete(entry.fileName);
-            record[entry.fileName] = entry;
+        for (const bag of bags) {
+            if (typeof bag[0] === 'string') {
+                if (bag[0] === entry.fileName) {
+                    // @ts-ignore
+                    bag[1] = entry
+                    remaining -= 1
+                }
+            } else {
+                if (bag[0](entry)) {
+                    // @ts-ignore
+                    bag[1] = entry
+                    remaining -= 1
+                }
+            }
+            if (remaining === 0) break
         }
     }
-    return entries.map((name) => record[name]);
+    return bags.map(b => b[1])
 }
 
 /**
