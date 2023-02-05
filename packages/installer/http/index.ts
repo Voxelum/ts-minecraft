@@ -90,7 +90,7 @@ export async function download(options: DownloadOptions) {
     }
   } catch (e) {
     await fd?.close().catch(() => { })
-    throw new DownloadFileSystemError(`File to get access on ${destination}`, urls, headers, destination, e)
+    throw new DownloadFileSystemError(`Failed to get access on ${destination}`, urls, headers, destination, e)
   }
 
   // Start to download
