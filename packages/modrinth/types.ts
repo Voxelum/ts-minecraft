@@ -195,7 +195,7 @@ export interface ProjectVersion {
     /**
      * A list of specific versions of mods that this version depends on
      */
-    dependencies: Array<{ version_id: string | null; project_id: string; dependency_type: string }>
+    dependencies: Array<{ version_id: string | null; project_id: string; dependency_type: "required" |  "optional" | "incompatible" | "embedded" }>
     /**
      * A list of versions of Minecraft that this version of the mod supports
      */
