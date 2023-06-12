@@ -206,7 +206,7 @@ function extractEntryTo(zip: ZipFile, e: Entry, dest: string) {
   return openEntryReadStream(zip, e).then((stream) => pipeline(stream, createWriteStream(dest)))
 }
 
-async function installLegacyForgeFromZip(zip: ZipFile, entries: ForgeLegacyInstallerEntriesPattern, profile: InstallProfile, mc: MinecraftFolder, options: InstallForgeOptions) {
+async function installLegacyForgeFromZip(zip: ZipFile, entries: ForgeLegacyInstallerEntriesPattern, profile: InstallProfile, mc: MinecraftFolder, jarFilePath: string, options: InstallForgeOptions) {
   const versionJson = profile.versionInfo
   if (!versionJson) {
     throw new Error(`Malform legacy installer json ${profile.version}`)
@@ -220,7 +220,11 @@ async function installLegacyForgeFromZip(zip: ZipFile, entries: ForgeLegacyInsta
   const versionJsonPath = join(rootPath, `${versionJson.id}.json`)
   await ensureFile(versionJsonPath)
 
-  const library = LibraryInfo.resolve(versionJson.libraries.find((l) => l.name.startsWith('net.minecraftforge:forge'))!)
+  const forgeLib = versionJson.libraries.find((l) => l.name.startsWith('net.minecraftforge:forge') || l.name.startsWith('net.minecraftforge:minecraftforge'))
+  if (!forgeLib) {
+    throw new BadForgeInstallerJarError(jarFilePath)
+  }
+  const library = LibraryInfo.resolve(forgeLib)
   const jarPath = mc.getLibraryByPath(library.path)
   await ensureFile(jarPath)
 
@@ -339,7 +343,7 @@ export async function walkForgeInstallerEntries(zip: ZipFile, forgeVersion: stri
     'data/server.lzma',
     'install_profile.json',
     'version.json',
-    (e) => e.fileName === `forge-${forgeVersion}-universal.jar` || (e.fileName.startsWith('forge-') && e.fileName.endsWith('-universal.jar')), // legacy installer format
+    (e) => e.fileName === `forge-${forgeVersion}-universal.jar` || (e.fileName.startsWith('forge-') && e.fileName.endsWith('-universal.jar')) || (e.fileName.startsWith('minecraftforge-universal-')), // legacy installer format
     'data/run.sh',
     'data/run.bat',
     'data/unix_args.txt',
@@ -407,7 +411,7 @@ function installByInstallerTask(version: RequiredVersion, minecraft: MinecraftLo
       return versionId
     } else if (isLegacyForgeInstallerEntries(entries)) {
       // legacy forge
-      return installLegacyForgeFromZip(zip, entries, profile, mc, options)
+      return installLegacyForgeFromZip(zip, entries, profile, mc, jarPath, options)
     } else {
       // bad forge
       throw new BadForgeInstallerJarError(jarPath)
