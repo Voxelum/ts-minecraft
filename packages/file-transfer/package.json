@@ -19,7 +19,7 @@
   "dependencies": {
     "@types/http-cache-semantics": "^4.0.1",
     "http-cache-semantics": "^4.1.1",
-    "undici": "^5.21.2"
+    "undici": "^5.22.1"
   },
   "repository": {
     "type": "git",
