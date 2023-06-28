@@ -124,6 +124,7 @@ export interface Project {
      * A list of ids for versions of the mod
      */
   versions: Array<string>
+  loaders: Array<string>
   /**
      * The URL of the icon of the mod
      */
