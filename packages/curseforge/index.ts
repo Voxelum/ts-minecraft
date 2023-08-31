@@ -70,7 +70,7 @@ export interface Mod {
     websiteUrl: string
     wikiUrl: string
     issuesUrl: string
-    sourceYUrl: string
+    sourceUrl: string
   }
   /**
    * One line summery

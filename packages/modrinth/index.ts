@@ -46,6 +46,8 @@ export interface SearchResultHit {
      * The total number of downloads for the project
      */
   downloads: number
+
+  follows: number
   /**
      * A link to the project's main page; */
   page_url: string
