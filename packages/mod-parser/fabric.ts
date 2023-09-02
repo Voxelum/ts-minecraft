@@ -144,24 +144,24 @@ export interface FabricModMetadata {
     /**
          * Contact e-mail pertaining to the mod. Must be a valid e-mail address.
          */
-    email: string
+    email?: string
     /**
          * IRC channel pertaining to the mod. Must be of a valid URL format - for example: irc://irc.esper.net:6667/charset for #charset at EsperNet - the port is optional, and assumed to be 6667 if not present.
          */
-    irc: string
+    irc?: string
     /**
          * Project or user homepage. Must be a valid HTTP/HTTPS address.
          */
-    homepage: string
+    homepage?: string
     /**
          * Project issue tracker. Must be a valid HTTP/HTTPS address.
          */
-    issues: string
+    issues?: string
     /**
          * Project source code repository. Must be a valid URL - it can, however, be a specialized URL for a given VCS (such as Git or Mercurial).
          * The list is not exhaustive - mods may provide additional, non-standard keys (such as discord, slack, twitter, etc) - if possible, they should be valid URLs.
          */
-    sources: string[]
+    sources?: string[]
   }
   /**
      * A list of authors of the mod. Each entry is a single name or an object containing following fields:
