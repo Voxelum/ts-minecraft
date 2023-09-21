@@ -245,7 +245,7 @@ async function installLegacyForgeFromZip(zip: ZipFile, entries: ForgeLegacyInsta
  * @param mc The minecraft location
  * @returns The installed version id
  */
-async function unpackForgeInstaller(zip: ZipFile, entries: ForgeInstallerEntriesPattern, forgeVersion: string, profile: InstallProfile, mc: MinecraftFolder, jarPath: string, options: InstallForgeOptions) {
+export async function unpackForgeInstaller(zip: ZipFile, entries: ForgeInstallerEntriesPattern, forgeVersion: string, profile: InstallProfile, mc: MinecraftFolder, jarPath: string, options: InstallForgeOptions) {
   const versionJson: VersionJson = await readEntry(zip, entries.versionJson).then((b) => b.toString()).then(JSON.parse)
 
   // apply override for inheritsFrom
@@ -379,7 +379,7 @@ export class BadForgeInstallerJarError extends Error {
   }
 }
 
-function installByInstallerTask(version: RequiredVersion, minecraft: MinecraftLocation, options: InstallForgeOptions) {
+export function installByInstallerTask(version: RequiredVersion, minecraft: MinecraftLocation, options: InstallForgeOptions) {
   return task('installForge', async function () {
     function getForgeArtifactVersion() {
       const [_, minor] = version.mcversion.split('.')

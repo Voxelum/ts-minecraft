@@ -7,6 +7,7 @@
 export * from './fabric'
 export * from './liteloader'
 export * from './forge'
+export * from './neoForge'
 export * from './minecraft'
 export * from './profile'
 export * from './optifine'
