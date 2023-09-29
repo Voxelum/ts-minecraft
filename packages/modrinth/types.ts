@@ -59,95 +59,95 @@ export interface GameVersion {
 
 export interface Project {
   /**
-     * The ID of the mod, encoded as a base62 string
-     */
+    * The ID of the mod, encoded as a base62 string
+    */
   id: string
   /**
-     * The slug of a mod, used for vanity URLs
-     */
+   * The slug of a mod, used for vanity URLs
+   */
   slug: string
   /**
-     * The id of the team that has ownership of this mod
-     */
+   * The id of the team that has ownership of this mod
+   */
   team: string
   /**
-     * The title or name of the mod
-     */
+   * The title or name of the mod
+   */
   title: string
   /**
-     * A short description of the mod
-     */
+   * A short description of the mod
+   */
   description: string
   /**
-     * A long form description of the mod.
-     */
+   * A long form description of the mod.
+   */
   body: string
   /**
-     * DEPRECATED The link to the long description of the mod
-     */
+   * DEPRECATED The link to the long description of the mod
+   */
   body_url?: string
   /**
-     * The date at which the mod was first published
-     */
+   * The date at which the mod was first published
+   */
   published: string
   /**
-     * The date at which the mod was updated
-     */
+   * The date at which the mod was updated
+   */
   updated: string
   /**
-     * The status of the mod - approved, rejected, draft, unlisted, processing, or unknown
-     */
+   * The status of the mod - approved, rejected, draft, unlisted, processing, or unknown
+   */
   status: string
   /**
-     * The license of the mod
-     */
+   * The license of the mod
+   */
   license: License
   /**
-     * The support range for the client mod - required, optional, unsupported, or unknown
-     */
+   * The support range for the client mod - required, optional, unsupported, or unknown
+   */
   client_side: string
   /**
-     * The support range for the server mod - required, optional, unsupported, or unknown
-     */
+   * The support range for the server mod - required, optional, unsupported, or unknown
+   */
   server_side: string
   /**
-     * The total number of downloads the mod has
-     */
+   * The total number of downloads the mod has
+   */
   downloads: number
 
   followers: number
   /**
-     * A list of the categories that the mod is in
-     */
+   * A list of the categories that the mod is in
+   */
   categories: Array<string>
   /**
-     * A list of ids for versions of the mod
-     */
+   * A list of ids for versions of the mod
+   */
   versions: Array<string>
   loaders: Array<string>
   /**
-     * The URL of the icon of the mod
-     */
+   * The URL of the icon of the mod
+   */
   icon_url?: string
   /**
-     * An optional link to where to submit bugs or issues with the mod
-     */
+   * An optional link to where to submit bugs or issues with the mod
+   */
   issues_url?: string
   /**
-     * An optional link to the source code for the mod
-     */
+   * An optional link to the source code for the mod
+   */
   source_url?: string
   /**
-     * An optional link to the mod's wiki page or other relevant information
-     */
+   * An optional link to the mod's wiki page or other relevant information
+   */
   wiki_url?: string
   /**
-     * An optional link to the mod's discord
-     */
+   * An optional link to the mod's discord
+   */
   discord_url?: string
   /**
-     * An optional list of all donation links the mod has
-     */
+   * An optional list of all donation links the mod has
+   */
   donation_urls: Array<DonationLink>
 
   project_type: string
