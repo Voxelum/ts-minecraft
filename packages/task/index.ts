@@ -45,7 +45,7 @@ export interface Task<T = any> {
 
   onChildUpdate(chunkSize: number): void
 
-  map<N>(transform: Transform<this, N>): Task<N>
+  map<N>(transform: Transform<this, N>): Task<N extends Promise<infer R> ? R : N>
 
   setName(name: string, param?: Record<string, any>): this
 }
@@ -203,7 +203,7 @@ export abstract class BaseTask<T> implements Task<T> {
   protected abstract pauseTask(): Promise<void>
   protected abstract resumeTask(): Promise<void>
 
-  map<N>(transform: Transform<this, N>): Task<N> {
+  map<N>(transform: Transform<this, N>): Task<N extends Promise<infer R> ? R : N> {
     const copy = Object.create(this)
     const wait = copy.wait
     copy.wait = function (this: typeof copy) {
@@ -302,9 +302,9 @@ export abstract class TaskGroup<T> extends BaseTask<T> {
     await Promise.all(this.children.map((task) => task.resume()))
   }
 
-  async all<Z, T extends Task<Z>>(tasks: Iterable<T>, { throwErrorImmediately, getErrorMessage }: { throwErrorImmediately?: boolean; getErrorMessage?: (errors: any[]) => string } = { throwErrorImmediately: true, getErrorMessage: (errors: any[]) => '' }): Promise<Z[]> {
+  async all<T extends Task<any>>(tasks: Iterable<T>, { throwErrorImmediately, getErrorMessage }: { throwErrorImmediately?: boolean; getErrorMessage?: (errors: any[]) => string } = { throwErrorImmediately: true, getErrorMessage: (errors: any[]) => '' }): Promise<(T extends Task<infer R> ? R : never)[]> {
     const errors: unknown[] = []
-    const promises: Promise<Z | void>[] = []
+    const promises: Promise<any | void>[] = []
     for (const task of tasks) {
       this.children.push(task)
       const promise = task.startAndWait(this.context, this).catch((error) => {
@@ -321,7 +321,7 @@ export abstract class TaskGroup<T> extends BaseTask<T> {
       if (errors.length > 0) {
         throw new AggregateError(errors, getErrorMessage?.(errors))
       }
-      return result as Z[]
+      return result
     } catch (e) {
       // if throwErrorImmediately
       // force cancel all other tasks
