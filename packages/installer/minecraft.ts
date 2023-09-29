@@ -1,7 +1,7 @@
 import { MinecraftFolder, MinecraftLocation, ResolvedLibrary, ResolvedVersion, Version, Version as VersionJson } from '@xmcl/core'
-import { ChecksumValidatorOptions, DownloadBaseOptions, JsonValidator, Validator } from '@xmcl/file-transfer'
+import { ChecksumNotMatchError, ChecksumValidatorOptions, DownloadBaseOptions, JsonValidator, Validator } from '@xmcl/file-transfer'
 import { task, Task } from '@xmcl/task'
-import { readFile, writeFile } from 'fs/promises'
+import { readFile, stat, writeFile } from 'fs/promises'
 import { join } from 'path'
 import { Dispatcher, request } from 'undici'
 import { DownloadTask } from './downloadTask'
@@ -138,6 +138,10 @@ export interface AssetsOptions extends DownloadBaseOptions, ParallelTaskOptions 
   assetsIndexUrl?: string | string[] | ((version: ResolvedVersion) => string | string[])
 
   checksumValidatorResolver?: (checksum: ChecksumValidatorOptions) => Validator
+  /**
+   * Only precheck the size of the assets. Do not check the hash.
+   */
+  prevalidSizeOnly?: boolean
 }
 
 export type InstallLibraryVersion = Pick<ResolvedVersion, 'libraries' | 'minecraftDirectory'>
@@ -528,7 +532,16 @@ export class InstallAssetTask extends DownloadTask {
     super({
       url: urls,
       destination: file,
-      validator: options.checksumValidatorResolver?.({ algorithm: 'sha1', hash }) || { algorithm: 'sha1', hash },
+      validator: options.prevalidSizeOnly
+        ? {
+          async validate(destination, url) {
+            const fstat = await stat(destination).catch(() => ({ size: -1 }))
+            if (fstat.size !== size) {
+              throw new ChecksumNotMatchError('size', size.toString(), fstat.size.toString(), destination, url)
+            }
+          },
+        }
+        : options.checksumValidatorResolver?.({ algorithm: 'sha1', hash }) || { algorithm: 'sha1', hash },
       headers: options.headers,
       agent: options.agent,
       skipPrevalidate: options.skipPrevalidate,
