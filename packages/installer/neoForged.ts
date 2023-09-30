@@ -8,7 +8,7 @@ import { normalizeArray } from './utils'
 import { ZipValidator } from './zipValdiator'
 import { Task, task } from '@xmcl/task'
 
-export class DownloadNeoForgeInstallerTask extends DownloadTask {
+export class DownloadNeoForgedInstallerTask extends DownloadTask {
   readonly installJarPath: string
 
   constructor(version: string, minecraft: MinecraftFolder, options: InstallForgeOptions) {
@@ -46,15 +46,15 @@ export class DownloadNeoForgeInstallerTask extends DownloadTask {
   }
 }
 
-export async function installNeoForge(version: string, minecraft: MinecraftLocation, options: InstallForgeOptions): Promise<string> {
-  return installNeoForgeTask(version, minecraft, options).startAndWait()
+export async function installNeoForged(version: string, minecraft: MinecraftLocation, options: InstallForgeOptions): Promise<string> {
+  return installNeoForgedTask(version, minecraft, options).startAndWait()
 }
 
-export function installNeoForgeTask(version: string, minecraft: MinecraftLocation, options: InstallForgeOptions): Task<string> {
+export function installNeoForgedTask(version: string, minecraft: MinecraftLocation, options: InstallForgeOptions): Task<string> {
   return task('installForge', async function () {
     const [_, forgeVersion] = version.split('-')
     const mc = MinecraftFolder.from(minecraft)
-    const jarPath = await this.yield(new DownloadNeoForgeInstallerTask(version, mc, options)
+    const jarPath = await this.yield(new DownloadNeoForgedInstallerTask(version, mc, options)
       .map(function () { return this.installJarPath }))
 
     const zip = await open(jarPath, { lazyEntries: true, autoClose: false })
