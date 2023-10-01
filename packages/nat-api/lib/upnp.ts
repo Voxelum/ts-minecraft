@@ -119,11 +119,21 @@ export class UpnpClient {
 
     const protocol = options.protocol ? options.protocol.toUpperCase() : 'TCP'
 
-    await device.run('DeletePortMapping', {
-      NewRemoteHost: remote.host,
-      NewExternalPort: remotePort,
-      NewProtocol: protocol,
-    })
+    try {
+      await device.run('DeletePortMapping', {
+        NewRemoteHost: remote.host,
+        NewExternalPort: remotePort,
+        NewProtocol: protocol,
+      })
+      return true
+    } catch (e) {
+      const err = e as any
+      if (err.detail?.UPnPError && err.detail.UPnPError.errorCode === 714) {
+        // No such entry
+        return false
+      }
+      throw e
+    }
   }
 
   async getMappings(options: GetMappingOptions = {}): Promise<MappingInfo[]> {
