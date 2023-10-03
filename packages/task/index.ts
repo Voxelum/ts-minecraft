@@ -1,3 +1,5 @@
+import { setTimeout } from 'timers/promises'
+
 /**
  * @module @xmcl/task
  */
@@ -38,7 +40,7 @@ export interface Task<T = any> {
 
   pause(): Promise<void>
   resume(): Promise<void>
-  cancel(): Promise<void>
+  cancel(timeout?: number): Promise<void>
   start(context?: TaskContext, parent?: Task<any>): void
   wait(): Promise<T>
   startAndWait(context?: TaskContext, parent?: Task<any>): Promise<T>
@@ -128,8 +130,8 @@ export abstract class BaseTask<T> implements Task<T> {
 
   async pause() {
     if (this._state !== TaskState.Running) { return }
-    this._state = TaskState.Paused
     await this.pauseTask().then(() => {
+      this._state = TaskState.Paused
       this.context.onPaused?.(this)
     })
   }
@@ -142,13 +144,19 @@ export abstract class BaseTask<T> implements Task<T> {
     })
   }
 
-  async cancel() {
+  async cancel(timeout?: number) {
     if (this.state !== TaskState.Running && this.state !== TaskState.Idle) { return }
-    this._state = TaskState.Cancelled
     this.reject(new CancelledError())
-    await this.cancelTask().then(() => {
+    try {
+      if (timeout) {
+        await Promise.race([this.cancelTask(), setTimeout(timeout)])
+      } else {
+        await this.cancelTask()
+      }
+    } finally {
+      this._state = TaskState.Cancelled
       this.context.onCancelled?.(this)
-    })
+    }
   }
 
   wait() {
