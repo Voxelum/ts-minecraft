@@ -228,17 +228,18 @@ export interface ProjectVersion {
 
 export interface ModVersionFile {
   /**
-     * A map of hashes of the file. The key is the hashing algorithm and the value is the string version of the hash.
-     */
+   * A map of hashes of the file. The key is the hashing algorithm and the value is the string version of the hash.
+   */
   hashes: Record<string, string>
   /**
-     * A direct link to the file
-     */
+   * A direct link to the file
+   */
   url: string
   /**
-     * The name of the file
-     */
+   * The name of the file
+   */
   filename: string
+  primary: boolean
 }
 
 export interface License {
