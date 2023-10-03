@@ -612,7 +612,9 @@ export class CurseforgeV1Client {
   async getModFiles(options: GetModFilesOptions, signal?: AbortSignal) {
     const url = new URL(this.baseUrl + `/v1/mods/${options.modId}/files`)
     url.searchParams.append('gameVersion', options.gameVersion ?? '')
-    url.searchParams.append('modLoaderType', options.modLoaderType?.toString() ?? '')
+    if (options.modLoaderType !== undefined) {
+      url.searchParams.append('modLoaderType', options.modLoaderType?.toString() ?? '')
+    }
     url.searchParams.append('gameVersionTypeId', options.gameVersionTypeId?.toString() ?? '')
     url.searchParams.append('index', options.index?.toString() ?? '')
     url.searchParams.append('pageSize', options.pageSize?.toString() ?? '')
