@@ -116,8 +116,7 @@ export class Client extends (EventEmitter) {
     return this.transport.isConnected
   }
 
-  // eslint-disable-next-line no-undef
-  private refreshTimeout?: NodeJS.Timer
+  private refreshTimeout?: ReturnType<typeof setTimeout>
   private connectionPromise?: Promise<void>
   private _nonceMap = new Map<
     string,
