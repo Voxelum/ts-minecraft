@@ -13,10 +13,11 @@
         "java.ts",
         "diagnose.ts",
         "profile.ts",
-        "downloadTask.ts",
+        "labymod.ts",
+        "downloadTask.ts"
     ],
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "outDir": "./dist"
-    },
+    }
 }
