@@ -6,7 +6,6 @@ import { dirname } from 'path'
 import { Dispatcher, request } from 'undici'
 import { DownloadTask } from './downloadTask'
 import { ensureDir } from './utils'
-import { version } from 'os'
 
 export interface LabyModManifest {
   labyModVersion: string
@@ -27,7 +26,7 @@ export interface LabyModManifest {
   minecraftVersions: MinecraftVersion[]
 }
 
-export interface MinecraftVersion {
+interface MinecraftVersion {
   tag: string
   version: string
   index: number
