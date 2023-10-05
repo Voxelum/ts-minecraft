@@ -427,6 +427,8 @@ export interface SearchOptions {
    * Filter only mods associated to a given modloader (Forge, Fabric ...). Must be coupled with gameVersion.
    */
   modLoaderType?: FileModLoaderType
+
+  modLoaderTypes?: string[]
   /**
    * Filter only mods that contain files tagged with versions of the given gameVersionTypeId
    */
