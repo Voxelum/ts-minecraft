@@ -417,7 +417,7 @@ export namespace Version {
     let time = ''
     let type = ''
     let logging: any
-    const minecraftVersion: string = rootVersion.clientVersion ?? rootVersion.id
+    const minecraftVersion: string = rootVersion.clientVersion ?? rootVersion._minecraftVersion ?? rootVersion.id
     let location: string
     let javaVersion: JavaVersion = { majorVersion: 8, component: 'jre-legacy' }
 
@@ -849,7 +849,11 @@ export interface Version {
 
   javaVersion?: JavaVersion
   /**
-     * NON CONVERSION! This only present in some third party launcher like PCL to mark the real minecraft version
-     */
+   * NON CONVERSION! This only present in some third party launcher like PCL to mark the real minecraft version
+   */
   clientVersion?: string
+  /**
+   * NON CONVERSION! This only present in some third party launcher like Labymod to mark the real minecraft version
+   */
+  _minecraftVersion?: string
 }
