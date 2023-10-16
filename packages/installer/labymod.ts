@@ -1,4 +1,4 @@
-import { MinecraftFolder, MinecraftLocation } from '@xmcl/core'
+import { MinecraftFolder, MinecraftLocation, LibraryInfo } from '@xmcl/core'
 import { DownloadBaseOptions } from '@xmcl/file-transfer'
 import { Task, task, AbortableTask, CancelledError } from '@xmcl/task'
 import { writeFile } from 'fs/promises'
@@ -63,14 +63,37 @@ class JsonTask extends AbortableTask<string> {
     const librariesUrl = `https://laby-releases.s3.de.io.cloud.ovh.net/api/v1/libraries/${this.environment}.json`
     const versionInfo = this.manifest.minecraftVersions.find((v) => v.tag === this.tag)!
 
+    interface LibInfo {
+      name: string
+      url: string
+      minecraftVersion: string
+      sha1: string
+      size: number
+      natives: any[]
+      resolvedAt: number
+    }
     // Get version json and merge with libraries
-    const libraries = await request(librariesUrl, { dispatcher: this.dispatcher, signal: this.controller.signal }).then((res) => res.body.json())
+    const libraries: LibInfo[] = await request(librariesUrl, { dispatcher: this.dispatcher, signal: this.controller.signal })
+      .then((res) => res.body.json())
+      .then((res) => res.libraries as LibInfo[])
+      .then((libs) => libs.filter(lib => lib.minecraftVersion === 'all' || lib.minecraftVersion === this.tag))
     const versionJson = await request(versionInfo.customManifestUrl, { dispatcher: this.dispatcher, signal: this.controller.signal }).then((res) => res.body.json())
-    versionJson.libraries.push(...libraries, {
-      name: 'net.labymod:LabyMod:4',
+
+    versionJson.libraries.push(...libraries.map((l) => ({
+      name: l.name,
       downloads: {
         artifact: {
-          path: 'net/labymod/LabyMod/4/LabyMod-4.jar',
+          path: LibraryInfo.resolve(l.name).path,
+          sha1: l.sha1,
+          size: l.size,
+          url: l.url,
+        },
+      },
+    })), {
+      name: `net.labymod:LabyMod:${this.manifest.labyModVersion}`,
+      downloads: {
+        artifact: {
+          path: `net/labymod/LabyMod/${this.manifest.labyModVersion}/LabyMod-${this.manifest.labyModVersion}.jar`,
           sha1: this.manifest.sha1,
           size: this.manifest.size,
           url: `https://laby-releases.s3.de.io.cloud.ovh.net/api/v1/download/labymod4/${this.environment}/${this.manifest.commitReference}.jar`,
@@ -82,7 +105,7 @@ class JsonTask extends AbortableTask<string> {
     // write json to file
     const versionPath = this.folder.getPath('versions', versionJson.id, `${versionJson.id}.json`)
     await ensureDir(dirname(versionPath))
-    await writeFile(versionPath, JSON.stringify(versionJson))
+    await writeFile(versionPath, JSON.stringify(versionJson, null, 4))
 
     return versionJson.id
   }
