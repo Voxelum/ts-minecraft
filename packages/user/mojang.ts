@@ -395,8 +395,13 @@ export class MojangClient {
     })
 
     if (mcResponse.status === 401) {
-      throw new UnauthorizedError(await mcResponse.json())
+      throw new UnauthorizedError(await mcResponse.text())
     }
+
+    if (!mcResponse.ok || mcResponse.headers.get('content-type')?.toLocaleLowerCase() !== 'application/json') {
+      throw new Error(await mcResponse.text())
+    }
+
     const result = await mcResponse.json() as MinecraftOwnershipResponse
 
     return result
