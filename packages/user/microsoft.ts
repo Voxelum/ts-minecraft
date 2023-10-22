@@ -80,9 +80,9 @@ export class MicrosoftAuthenticator {
   }
 
   /**
-     * Authorize the xbox live. It will get the xsts token in response.
-     * @param xblResponseToken The {@link XBoxResponse.Token}
-     */
+   * Authorize the xbox live. It will get the xsts token in response.
+   * @param xblResponseToken The {@link XBoxResponse.Token}
+   */
   async authorizeXboxLive(xblResponseToken: string, relyingParty: 'rp://api.minecraftservices.com/' | 'http://xboxlive.com' = 'rp://api.minecraftservices.com/', signal?: AbortSignal) {
     const xstsResponse = await fetch('https://xsts.auth.xboxlive.com/xsts/authorize', {
       method: 'POST',
@@ -107,15 +107,15 @@ export class MicrosoftAuthenticator {
   }
 
   /**
-     * Get xbox user profile, including **username** and **avatar**.
-     *
-     * You can find the parameters from the {@link XBoxResponse}.
-     *
-     * @param xuid The `xuid` in a {@link XBoxResponse.DisplayClaims}
-     * @param uhs The `uhs` in a {@link XBoxResponse.DisplayClaims}
-     * @param xstsToken The {@link XBoxResponse.Token}
-     * @returns The user game profile.
-     */
+   * Get xbox user profile, including **username** and **avatar**.
+   *
+   * You can find the parameters from the {@link XBoxResponse}.
+   *
+   * @param xuid The `xuid` in a {@link XBoxResponse.DisplayClaims}
+   * @param uhs The `uhs` in a {@link XBoxResponse.DisplayClaims}
+   * @param xstsToken The {@link XBoxResponse.Token}
+   * @returns The user game profile.
+   */
   async getXboxGameProfile(xuid: string, uhs: string, xstsToken: string, signal?: AbortSignal) {
     const url = new URL(`https://profile.xboxlive.com/users/xuid(${xuid})/profile/settings`)
     url.searchParams.append('settings', ['PublicGamerpic', 'Gamertag'].join(','))
@@ -134,21 +134,21 @@ export class MicrosoftAuthenticator {
   }
 
   /**
-     * Acquire both Minecraft and xbox token and xbox game profile.
-     * You can use the xbox token to login Minecraft by {@link loginMinecraftWithXBox}.
-     *
-     * This method is the composition of calling
-     * - {@link authenticateXboxLive}
-     * - {@link authorizeXboxLive} to `rp://api.minecraftservices.com/`
-     * - {@link authorizeXboxLive} to `http://xboxlive.com`
-     * - {@link getXboxGameProfile}
-     *
-     * You can call them individually if you want a more detailed control.
-     *
-     * @param oauthAccessToken The microsoft access token
-     * @param signal The abort signal
-     * @returns The object contain xstsResponse (minecraft xbox token) and xbox game profile
-     */
+   * Acquire both Minecraft and xbox token and xbox game profile.
+   * You can use the xbox token to login Minecraft by {@link loginMinecraftWithXBox}.
+   *
+   * This method is the composition of calling
+   * - {@link authenticateXboxLive}
+   * - {@link authorizeXboxLive} to `rp://api.minecraftservices.com/`
+   * - {@link authorizeXboxLive} to `http://xboxlive.com`
+   * - {@link getXboxGameProfile}
+   *
+   * You can call them individually if you want a more detailed control.
+   *
+   * @param oauthAccessToken The microsoft access token
+   * @param signal The abort signal
+   * @returns The object contain xstsResponse (minecraft xbox token) and xbox game profile
+   */
   async acquireXBoxToken(oauthAccessToken: string, signal?: AbortSignal) {
     const xblResponse: XBoxResponse = await this.authenticateXboxLive(oauthAccessToken, signal)
     const minecraftXstsResponse: XBoxResponse = await this.authorizeXboxLive(xblResponse.Token, 'rp://api.minecraftservices.com/', signal)
@@ -158,13 +158,13 @@ export class MicrosoftAuthenticator {
   }
 
   /**
-     * This will return the response with Minecraft access token!
-     *
-     * This access token allows us to launch the game, but, we haven't actually checked if the account owns the game. Everything until here works with a normal Microsoft account!
-     *
-     * @param uhs uhs from {@link XBoxResponse} of {@link acquireXBoxToken}
-     * @param xstsToken You need to get this token from {@link acquireXBoxToken}
-     */
+   * This will return the response with Minecraft access token!
+   *
+   * This access token allows us to launch the game, but, we haven't actually checked if the account owns the game. Everything until here works with a normal Microsoft account!
+   *
+   * @param uhs uhs from {@link XBoxResponse} of {@link acquireXBoxToken}
+   * @param xstsToken You need to get this token from {@link acquireXBoxToken}
+   */
   async loginMinecraftWithXBox(uhs: string, xstsToken: string, signal?: AbortSignal) {
     const mcResponse = await fetch('https://api.minecraftservices.com/authentication/login_with_xbox', {
       method: 'POST',

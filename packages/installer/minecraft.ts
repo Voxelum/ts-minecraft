@@ -90,7 +90,7 @@ export async function getVersionList(options: {
   dispatcher?: Dispatcher
 } = {}): Promise<MinecraftVersionList> {
   const response = await request(DEFAULT_VERSION_MANIFEST_URL, { dispatcher: options.dispatcher, throwOnError: true })
-  return await response.body.json()
+  return await response.body.json() as MinecraftVersionList
 }
 
 /**
@@ -348,7 +348,7 @@ export function installAssetsTask(version: ResolvedVersion, options: AssetsOptio
           const response = await request(url, { dispatcher: options.agent?.dispatcher })
           const json = await response.body.json()
           await writeFile(jsonPath, JSON.stringify(json))
-          return json
+          return json as any
         } catch {
           // ignore
         }

@@ -35,7 +35,7 @@
   "sideEffects": false,
   "dependencies": {
     "discord-api-types": "^0.37.39",
-    "undici": "5.22.1"
+    "undici": "5.26.4"
   },
   "devDependencies": {
     "@types/node": "~18",
@@ -43,7 +43,7 @@
     "@xmcl/eslint-config": "workspace:^*",
     "esbuild": "^0.17.16",
     "typescript": "^5.2.2",
-    "tsx": "^3.12.1"
+    "tsx": "^3.14.0"
   },
   "engines": {
     "node": ">=16"

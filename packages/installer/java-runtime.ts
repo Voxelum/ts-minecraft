@@ -229,7 +229,7 @@ export async function fetchJavaRuntimeManifest(options: FetchJavaRuntimeManifest
     const target = targets[0]
     const manifestUrl = normalizeUrls(target.manifest.url, options.apiHost)[0]
     const response = await request(manifestUrl, { dispatcher: options.dispatcher, throwOnError: true })
-    const manifest: JavaRuntimeManifest = await response.body.json()
+    const manifest = await response.body.json() as JavaRuntimeManifest
     const result: JavaRuntimeManifest = {
       files: manifest.files,
       target: runtimeTarget,

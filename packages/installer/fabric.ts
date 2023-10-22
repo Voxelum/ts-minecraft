@@ -48,7 +48,7 @@ export interface FabricOptions {
  */
 export async function getFabricArtifacts(options?: FabricOptions): Promise<FabricArtifacts> {
   const response = await request('https://meta.fabricmc.net/v2/versions', { throwOnError: true, dispatcher: options?.dispatcher })
-  const body = response.body.json()
+  const body = await response.body.json() as FabricArtifacts
   return body
 }
 /**
@@ -58,7 +58,7 @@ export async function getFabricArtifacts(options?: FabricOptions): Promise<Fabri
  */
 export async function getYarnArtifactList(options?: FabricOptions): Promise<FabricArtifactVersion[]> {
   const response = await request('https://meta.fabricmc.net/v2/versions/yarn', { throwOnError: true, dispatcher: options?.dispatcher })
-  const body = response.body.json()
+  const body = await response.body.json() as FabricArtifactVersion[]
   return body
 }
 /**
@@ -69,7 +69,7 @@ export async function getYarnArtifactList(options?: FabricOptions): Promise<Fabr
  */
 export async function getYarnArtifactListFor(minecraft: string, options?: FabricOptions): Promise<FabricArtifactVersion[]> {
   const response = await request('https://meta.fabricmc.net/v2/versions/yarn/' + minecraft, { throwOnError: true, dispatcher: options?.dispatcher })
-  const body = response.body.json()
+  const body = await response.body.json() as FabricArtifactVersion[]
   return body
 }
 /**
@@ -79,7 +79,7 @@ export async function getYarnArtifactListFor(minecraft: string, options?: Fabric
  */
 export async function getLoaderArtifactList(options?: FabricOptions): Promise<FabricArtifactVersion[]> {
   const response = await request('https://meta.fabricmc.net/v2/versions/loader', { throwOnError: true, dispatcher: options?.dispatcher })
-  const body = response.body.json()
+  const body = await response.body.json() as FabricArtifactVersion[]
   return body
 }
 /**
@@ -90,7 +90,7 @@ export async function getLoaderArtifactList(options?: FabricOptions): Promise<Fa
  */
 export async function getLoaderArtifactListFor(minecraft: string, options?: FabricOptions): Promise<FabricLoaderArtifact[]> {
   const response = await request('https://meta.fabricmc.net/v2/versions/loader/' + minecraft, { throwOnError: true, dispatcher: options?.dispatcher })
-  const body = response.body.json()
+  const body = await response.body.json() as FabricLoaderArtifact[]
   return body
 }
 /**
@@ -102,7 +102,7 @@ export async function getLoaderArtifactListFor(minecraft: string, options?: Fabr
  */
 export async function getFabricLoaderArtifact(minecraft: string, loader: string, options?: FabricOptions): Promise<FabricLoaderArtifact> {
   const response = await request('https://meta.fabricmc.net/v2/versions/loader/' + minecraft + '/' + loader, { throwOnError: true, dispatcher: options?.dispatcher })
-  const body = response.body.json()
+  const body = await response.body.json() as FabricLoaderArtifact
   return body
 }
 
