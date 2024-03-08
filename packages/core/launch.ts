@@ -687,7 +687,7 @@ export async function generateArguments(options: LaunchOption) {
     launcher_version: launcherBrand,
     game_directory: gamePath,
     classpath: [
-      ...version.libraries.filter((lib) => !lib.isNative).map((lib) => mc.getLibraryByPath(lib.download.path)),
+      ...version.libraries.filter((lib) => !lib.isNative && !lib.classifier.startsWith('natives')).map((lib) => mc.getLibraryByPath(lib.download.path)),
       mc.getVersionJar(version.minecraftVersion),
       ...(options.extraClassPaths || []),
     ].join(delimiter),
