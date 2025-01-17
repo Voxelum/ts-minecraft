@@ -1,5 +1,12 @@
 # Changelog
 
+## 7.8.0
+### @xmcl/semver@0.1.0
+#### Features
+
+- feat: Add the fabric semver as package ([1af4026fed9301ede09e7b141e25230e865dc7c3](https://github.com/voxelum/minecraft-launcher-core-node/commit/1af4026fed9301ede09e7b141e25230e865dc7c3))
+
+
 ## 7.7.0
 ### @xmcl/client@3.2.0
 #### Features
